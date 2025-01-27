@@ -1,22 +1,32 @@
 import React from 'react';
+import './TodoItem.css'; // Asegúrate de que este archivo exista
 
-function TodoItem({ task }) {
+function TodoItem({ task, onToggle, onDelete }) {
   return (
-    <div style={itemStyle}>
-      <input type="checkbox" checked={task.completed} readOnly />
-      <span style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>
-        {task.text}
-      </span>
+    <div className={`todo-item ${task.completed ? 'completed' : ''}`}>
+      {/* Texto de la tarea */}
+      <span className="task-text">{task.text}</span>
+      {/* Contenedor de botones */}
+      <div className="actions">
+        {/* Botón para completar/desmarcar */}
+        <button 
+          className="complete-button" 
+          onClick={() => onToggle(task.id)}
+        >
+          {task.completed ? 'Desmarcar' : 'Completar'}
+        </button>
+
+        {/* Botón para eliminar */}
+        <button 
+          className="delete-button" 
+          onClick={() => onDelete(task.id)}
+        >
+          Eliminar
+        </button>
+      </div>
     </div>
   );
 }
 
-const itemStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  padding: '5px',
-  borderBottom: '1px solid #ccc',
-};
-
 export default TodoItem;
+

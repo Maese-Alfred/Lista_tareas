@@ -1,0 +1,56 @@
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin: 5px 0;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.task-text {
+  font-size: 16px;
+  flex: 1;
+}
+
+.completed .task-text {
+  text-decoration: line-through;
+  color: #888;
+}
+
+/* Contenedor de botones */
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Botón "Completar" */
+.complete-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.complete-button:hover {
+  background-color: #218838;
+}
+
+/* Botón "Eliminar" */
+.delete-button {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.delete-button:hover {
+  background-color: #ff1a1a;
+}
