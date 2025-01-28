@@ -1,8 +1,9 @@
 import React from 'react';
-import './TodoItem.css'; // Asegúrate de que este archivo exista
+import './TodoItem.css'; 
 
 function TodoItem({ task, onToggle, onDelete }) {
   return (
+    <div className='todo-content' >
     <div className={`todo-item ${task.completed ? 'completed' : ''}`}>
       {/* Texto de la tarea */}
       <span className="task-text">{task.text}</span>
@@ -24,6 +25,7 @@ function TodoItem({ task, onToggle, onDelete }) {
           Eliminar
         </button>
       </div>
+    </div>
     </div>
   );
 }

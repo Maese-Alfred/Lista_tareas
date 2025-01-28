@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import TodoForm from './components/TodoForm';
 import TodoList from './components/TodoList';
-
+import Header from './components/Header';
+import './App.css';
 
 function App() {
-  // Estado para las tareas
   const [tasks, setTasks] = useState([]);
-  // Estado para las categorías
-  const [categories, setCategories] = useState(['General']); // 'General' como categoría predeterminada
+  const [categories, setCategories] = useState(['General']); // 'General' como predeterminada
 
-  // Función para agregar una nueva tarea
+  // Agregar una nueva tarea
   const handleAddTask = (text, category) => {
     const newTask = {
       id: tasks.length + 1,
@@ -20,14 +19,14 @@ function App() {
     setTasks([...tasks, newTask]);
   };
 
-  // Función para agregar una nueva categoría
+  // Agregar una nueva categoría
   const handleAddCategory = (newCategory) => {
     if (!categories.includes(newCategory)) {
       setCategories([...categories, newCategory]);
     }
   };
 
-  // Función para alternar el estado de completado de una tarea
+  // Alternar el estado de completado de una tarea
   const handleToggleTask = (id) => {
     setTasks(
       tasks.map((task) =>
@@ -36,26 +35,41 @@ function App() {
     );
   };
 
-  // Función para eliminar una tarea
+  // Eliminar una tarea
   const handleDeleteTask = (id) => {
     setTasks(tasks.filter((task) => task.id !== id));
   };
 
+  // Eliminar una categoría
+  const handleDeleteCategory = (categoryToDelete) => {
+    // Eliminar la categoría de la lista
+    setCategories(categories.filter((cat) => cat !== categoryToDelete));
+
+    // Opcional: Eliminar o reasignar tareas que pertenecen a esa categoría
+    setTasks(tasks.filter((task) => task.category !== categoryToDelete));
+  };
+
   return (
     <div className="app-container">
-      <h1>Gestor de Tareas</h1>
+      <div className='sidebar'>
+      <Header  />
+      </div>
+      <div className='main'>
       {/* Formulario para añadir tareas */}
       <TodoForm
         onAddTask={handleAddTask}
         categories={categories}
         onAddCategory={handleAddCategory}
       />
-      {/* Lista de tareas agrupadas por categoría */}
+      {/* Lista de tareas */}
       <TodoList
         tasks={tasks}
+        categories={categories}
         onToggle={handleToggleTask}
         onDelete={handleDeleteTask}
+        onDeleteCategory={handleDeleteCategory} // Nueva prop para eliminar categorías
       />
+      </div>
     </div>
   );
 }

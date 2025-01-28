@@ -1,5 +1,11 @@
+.category-tasks {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Tres columnas iguales */
+  gap: 20px; /* Espaciado entre las tareas */
+}
 .todo-list {
-  max-width: 500px;
+  display: grid;
+  max-width: 800px; /* Aumenta el ancho máximo */
   margin: 0 auto;
   padding: 20px;
   text-align: center;
