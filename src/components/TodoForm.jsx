@@ -15,6 +15,10 @@ function TodoForm({ onAddTask, categories, onAddCategory }) {
     setTaskText('');
     setSelectedCategory('');
   };
+  const handleCancelCategory = () => {
+    setIsCreatingCategory(false);
+    setNewCategory('');
+  };
 
   const handleAddCategory = () => {
     if (newCategory.trim()) {
@@ -75,6 +79,14 @@ function TodoForm({ onAddTask, categories, onAddCategory }) {
           >
             Crear
           </button>
+          <button
+            type="button"
+            onClick={handleCancelCategory}
+            className="todo-cancel-category-button"
+          >
+            Cancelar
+          </button>
+          
         </div>
       )}
 

@@ -1,74 +1,70 @@
-import React, { useState } from 'react';
-import TodoForm from './components/TodoForm';
-import TodoList from './components/TodoList';
-import Header from './components/Header';
-import './App.css';
+import React, { useState } from "react";
+import TodoList from "./components/TodoList";
+import TodoForm from "./components/TodoForm.jsx";
+import Header from "./components/Header";
+import "./App.css";
 
 function App() {
-  const [tasks, setTasks] = useState([]);
-  const [categories, setCategories] = useState(['General']); // 'General' como predeterminada
+  const [categories, setCategories] = useState(["Trabajo", "Personal"]);
+  const [tasks, setTasks] = useState({
+    Trabajo: [],
+    Personal: [],
+  });
 
-  // Agregar una nueva tarea
-  const handleAddTask = (text, category) => {
-    const newTask = {
-      id: tasks.length + 1,
-      text,
-      completed: false,
-      category,
-    };
-    setTasks([...tasks, newTask]);
-  };
-
-  // Agregar una nueva categoría
-  const handleAddCategory = (newCategory) => {
-    if (!categories.includes(newCategory)) {
-      setCategories([...categories, newCategory]);
+  // Función para agregar una nueva categoría
+  const handleAddCategory = (category) => {
+    if (!categories.includes(category)) {
+      setCategories([...categories, category]);
+      setTasks({ ...tasks, [category]: [] });
     }
   };
 
-  // Alternar el estado de completado de una tarea
-  const handleToggleTask = (id) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
+  // Función para agregar una nueva tarea
+  const handleAddTask = (taskText, category) => {
+    const newTask = { text: taskText, completed: false }; // Nueva tarea con estructura adecuada
+    setTasks({
+      ...tasks,
+      [category]: [...tasks[category], newTask],
+    });
+  };
+
+  const handleToggleTask = (category, taskIndex) => {
+    const updatedTasks = tasks[category].map((task, index) =>
+      index === taskIndex ? { ...task, completed: !task.completed } : task
     );
+    setTasks({
+      ...tasks,
+      [category]: updatedTasks,
+    });
   };
 
-  // Eliminar una tarea
-  const handleDeleteTask = (id) => {
-    setTasks(tasks.filter((task) => task.id !== id));
-  };
-
-  // Eliminar una categoría
-  const handleDeleteCategory = (categoryToDelete) => {
-    // Eliminar la categoría de la lista
-    setCategories(categories.filter((cat) => cat !== categoryToDelete));
-
-    // Opcional: Eliminar o reasignar tareas que pertenecen a esa categoría
-    setTasks(tasks.filter((task) => task.category !== categoryToDelete));
+  // Función para eliminar una tarea
+  const handleDeleteTask = (category, taskIndex) => {
+    const updatedTasks = tasks[category].filter(
+      (_, index) => index !== taskIndex
+    );
+    setTasks({
+      ...tasks,
+      [category]: updatedTasks,
+    });
   };
 
   return (
-    <div className="app-container">
-      <div className='sidebar'>
-      <Header  />
+    <div className="App">
+      <div className="header-container">
+        <Header />
       </div>
-      <div className='main'>
-      {/* Formulario para añadir tareas */}
-      <TodoForm
-        onAddTask={handleAddTask}
-        categories={categories}
-        onAddCategory={handleAddCategory}
-      />
-      {/* Lista de tareas */}
-      <TodoList
-        tasks={tasks}
-        categories={categories}
-        onToggle={handleToggleTask}
-        onDelete={handleDeleteTask}
-        onDeleteCategory={handleDeleteCategory} // Nueva prop para eliminar categorías
-      />
+      <div className="main">
+        <TodoForm
+          onAddTask={handleAddTask}
+          categories={categories}
+          onAddCategory={handleAddCategory}
+        />
+        <TodoList
+          tasks={tasks}
+          onDeleteTask={handleDeleteTask}
+          onToggle={handleToggleTask} // Pasar la lógica de completado
+        />
       </div>
     </div>
   );

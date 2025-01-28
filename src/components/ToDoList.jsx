@@ -1,41 +1,30 @@
 import React from 'react';
-import TodoItem from './TodoItem'; // Componente para renderizar cada tarea
-import './TodoList.css'; // Archivo de estilos para TodoList
+import './TodoList.css';
+import TodoItem from './ToDoItem.jsx';
 
-function TodoList({ tasks, categories, onToggle, onDelete, onDeleteCategory }) {
+function TodoList({ tasks, onDeleteTask,onToggle }) {
   return (
     <div className="todo-list">
-      {/* Itera sobre las categorías para agrupar tareas */}
-      {categories.map((category) => (
-        <div key={category} className="category-section">
-          {/* Encabezado de la categoría */}
-          <div className="category-header">
-            <h2>{category}</h2>
-            <button
-              className="delete-category-button"
-              onClick={() => onDeleteCategory(category)}
-            >
-              Eliminar categoría
-            </button>
-          </div>
-
-          {/* Lista de tareas filtradas por categoría */}
-          <div className="category-tasks">
-            {tasks
-              .filter((task) => task.category === category)
-              .map((task) => (
-                <TodoItem
-                  key={task.id}
-                  task={task}
-                  onToggle={onToggle}
-                  onDelete={onDelete}
-                />
-              ))}
-          </div>
+      {Object.entries(tasks).map(([category, tasksInCategory]) => (
+        <div key={category} className="category-container">
+          <h2 className="category-title">{category}</h2>
+          <ul className="task-list">
+            {tasksInCategory.map((task, index) => (
+             <TodoItem
+             key={index}
+             task={task}
+             onToggle={() => onToggle(category, index)} // Pasar índice para identificar la tarea
+             onDelete={() => onDeleteTask(category, index)}
+           />
+            ))}
+          </ul>
         </div>
       ))}
     </div>
   );
 }
+
+
+
 
 export default TodoList;
