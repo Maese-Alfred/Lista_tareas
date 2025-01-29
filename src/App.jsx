@@ -1,17 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TodoList from "./components/TodoList";
 import TodoForm from "./components/TodoForm.jsx";
 import Header from "./components/Header";
+import TaskCalendar from "./components/TaskCalendar";
 import "./App.css";
+import TaskSummary from "./components/TaskSummary.jsx";
 
-function App() {
-  const [categories, setCategories] = useState(["Trabajo", "Personal"]);
-  const [tasks, setTasks] = useState({
-    Trabajo: [],
-    Personal: [],
+function App() { 
+  const [categories, setCategories] = useState(() => {
+    const savedCategories = localStorage.getItem("categories");
+    return savedCategories ? JSON.parse(savedCategories) : [];
   });
 
-  // Función para agregar una nueva categoría
+  const [tasks, setTasks] = useState(() => {
+    const savedTasks = localStorage.getItem("tasks");
+    return savedTasks ? JSON.parse(savedTasks) : {};
+  });
+
+  const [activeSections, setActiveSections] = useState(["Tareas"]); 
+
+  useEffect(() => {
+    localStorage.setItem("categories", JSON.stringify(categories));
+  }, [categories]);
+  
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+  
+  // ✅ Función corregida para alternar secciones activas
+  const handleToggleSection = (section) => {
+    setActiveSections((prevSections) =>
+      prevSections.includes(section)
+        ? prevSections.filter((s) => s !== section) // Si está activo, lo quitamos
+        : [...prevSections, section] // Si no está activo, lo agregamos
+    );
+  };
+
+  // ✅ Agregar una nueva categoría
   const handleAddCategory = (category) => {
     if (!categories.includes(category)) {
       setCategories([...categories, category]);
@@ -19,52 +44,73 @@ function App() {
     }
   };
 
-  // Función para agregar una nueva tarea
+  // ✅ Agregar una nueva tarea
   const handleAddTask = (taskText, category) => {
-    const newTask = { text: taskText, completed: false }; // Nueva tarea con estructura adecuada
     setTasks({
       ...tasks,
-      [category]: [...tasks[category], newTask],
+      [category]: [...tasks[category], { text: taskText, date: null, completed: false }], 
     });
   };
 
+  // ✅ Marcar tarea como completada
   const handleToggleTask = (category, taskIndex) => {
     const updatedTasks = tasks[category].map((task, index) =>
       index === taskIndex ? { ...task, completed: !task.completed } : task
     );
-    setTasks({
-      ...tasks,
-      [category]: updatedTasks,
-    });
+    setTasks({ ...tasks, [category]: updatedTasks });
   };
 
-  // Función para eliminar una tarea
+  // ✅ Eliminar tarea
   const handleDeleteTask = (category, taskIndex) => {
-    const updatedTasks = tasks[category].filter(
-      (_, index) => index !== taskIndex
+    const updatedTasks = tasks[category].filter((_, index) => index !== taskIndex);
+    setTasks({ ...tasks, [category]: updatedTasks });
+  };
+
+  // ✅ Asignar fecha a una tarea
+  const handleAssignDate = (category, taskIndex, date) => {
+    const updatedTasks = tasks[category].map((task, index) =>
+      index === taskIndex ? { ...task, date } : task
     );
-    setTasks({
-      ...tasks,
-      [category]: updatedTasks,
-    });
+    setTasks({ ...tasks, [category]: updatedTasks });
   };
 
   return (
     <div className="App">
-      <div className="header-container">
-        <Header />
-      </div>
+      <Header onToggleSection={handleToggleSection} activeSections={activeSections} /> 
+
       <div className="main">
-        <TodoForm
-          onAddTask={handleAddTask}
-          categories={categories}
-          onAddCategory={handleAddCategory}
-        />
-        <TodoList
-          tasks={tasks}
-          onDeleteTask={handleDeleteTask}
-          onToggle={handleToggleTask} // Pasar la lógica de completado
-        />
+        {activeSections.map((section) => {
+          if (section === "Tareas") {
+            return (
+              <div key="Tareas">
+                <TodoForm
+                  onAddTask={handleAddTask}
+                  categories={categories}
+                  onAddCategory={handleAddCategory}
+                />
+                <TodoList
+                  tasks={tasks}
+                  onDeleteTask={handleDeleteTask}
+                  onToggle={handleToggleTask} 
+                />
+              </div>
+            );
+          } else if (section === "Calendario") {
+            return (
+              <div key="Calendario">
+                <TaskCalendar tasks={tasks} onAssignDate={handleAssignDate} />
+              </div>
+            );
+          } else if (section === "Resumen") {
+            return (
+              <div key="Resumen">
+                <TaskSummary tasks={tasks} />
+              </div>
+            );
+          } else {
+            return null;
+          }
+        })}
       </div>
     </div>
   );

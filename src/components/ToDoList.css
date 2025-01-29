@@ -1,9 +1,8 @@
 .todo-list {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
+  grid-auto-rows: auto;
   gap: 20px;
-  padding: 20px;
 }
 
 .category-container {

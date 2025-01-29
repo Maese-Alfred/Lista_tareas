@@ -1,0 +1,38 @@
+.task-summary {
+    margin: 20px 0;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f1f1f1;
+  }
+  
+  .task-summary h3 {
+    margin-bottom: 15px;
+    font-size: 18px;
+    text-align: center;
+    color: #333;
+  }
+  
+  .task-summary ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .task-summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .task-summary-text {
+    font-size: 16px;
+    color: #555;
+  }
+  
+  .task-summary-date {
+    font-size: 14px;
+    color: #007bff;
+  }
+  
